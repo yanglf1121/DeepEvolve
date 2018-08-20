@@ -3,6 +3,7 @@ from __future__ import print_function
 import logging
 from genome import Genome
 from tqdm import tqdm
+import itertools
 
 # Setup logging.
 logging.basicConfig(
@@ -55,13 +56,15 @@ def generate_genome_list(all_possible_genes):
 
     """
     genomes = []
-
+    
+    # Need to iterate all possible nb_neurons conbination first
+    nb_neurons = all_possible_genes['nb_neurons']
+    total_l = 6
     # This is silly.
-    for nbn in all_possible_genes['nb_neurons']:
+    for nbn in itertools.product(nb_neurons, repeat=total_l):
         for nbl in all_possible_genes['nb_layers']:
             for a in all_possible_genes['activation']:
                 for o in all_possible_genes['optimizer']:
-
                     # Set the parameters.
                     genome = {
                         'nb_neurons': nbn,
@@ -87,7 +90,7 @@ def main():
         'activation': ['relu', 'elu', 'tanh', 'sigmoid', 'hard_sigmoid','softplus','linear'],
         'optimizer':  ['rmsprop', 'adam', 'sgd', 'adagrad', 'adadelta', 'adamax', 'nadam'],
     }
-
+    
     logging.info("***Brute forcing networks***")
 
     genomes = generate_genome_list(all_possible_genes)
